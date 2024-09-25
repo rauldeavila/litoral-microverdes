@@ -21,7 +21,7 @@ function Home() {
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-    let scrollSpeed = 1; // Ajuste a velocidade do scroll
+    let scrollSpeed = 5; // Ajuste a velocidade do scroll
     let requestId;
 
     const scroll = () => {
