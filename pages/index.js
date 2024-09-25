@@ -40,10 +40,9 @@ function Home() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Em breve essa será a página do Litoral Microverdes</h1>
+      <h1 style={styles.title}>🌱 Litoral Microverdes - Em Construção 🐶</h1>
       <div style={styles.scrollWrapper} ref={scrollRef}>
         <div style={styles.scrollContent}>
-          {/* Duplicamos o array de fotos para criar o efeito infinito */}
           {photos.concat(photos).map((photo, index) => (
             <div key={index} style={styles.imageContainer}>
               <img src={photo} alt={`Bia ${index + 1}`} style={styles.image} />
@@ -59,24 +58,24 @@ const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
+    height: '100vh', // Ocupa toda a altura da viewport
     backgroundColor: '#EFE9CE',
     color: '#145018',
     textAlign: 'center',
-    overflowX: 'hidden', // Esconde a barra de rolagem horizontal
+    overflow: 'hidden', // Esconde rolagem vertical
   },
   title: {
-    marginBottom: '20px',
+    marginTop: '20px',
     fontSize: '24px',
   },
   scrollWrapper: {
     display: 'flex',
     overflow: 'hidden',
-    width: '100vw', // Ocupa toda a largura da viewport
-    maxWidth: '100%',
-    margin: '0 -20px', // Alinha com as bordas do navegador
+    width: '100vw',
+    flex: 1, // Faz o slideshow ocupar o espaço restante
+    margin: '0 -20px', // Garante que o slideshow comece nas bordas
   },
   scrollContent: {
     display: 'flex',
@@ -86,11 +85,11 @@ const styles = {
   },
   imageContainer: {
     flexShrink: 0,
-    padding: '0 5px', // Pequeno espaço entre as fotos
+    padding: '0 5px', // Espaço entre as imagens
   },
   image: {
-    height: '150px',
-    width: 'auto', // Mantém o aspecto original
+    height: '100%', // Ajusta dinamicamente à altura disponível
+    width: 'auto', // Mantém o aspecto original das fotos
     borderRadius: '8px',
   },
 };
