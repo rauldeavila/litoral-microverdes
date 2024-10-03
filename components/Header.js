@@ -25,7 +25,7 @@ const Header = () => {
         </a>
       </div>
       <div className={styles.logoContainer}>
-        <img src="Images/logo-transparent.png" alt="Litoral Microverdes" className={styles.logo} />
+        <img src="/images/logo-transparent.png" alt="Litoral Microverdes" className={styles.logo} />
       </div>
       <div className={styles.searchContainer}>
         <FaSearch

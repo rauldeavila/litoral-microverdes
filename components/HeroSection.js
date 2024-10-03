@@ -6,7 +6,7 @@ const HeroSection = () => {
     <div className={styles.heroContainer}>
       <div className={styles.heroContent}>
         <img
-          src="Images/hero-image.jpg"
+          src="/images/hero-image.jpg"
           alt="Hero Image"
           className={styles.heroImage}
         />

@@ -7,7 +7,7 @@ const WhoWeAreSection = () => {
       <h2 className={styles.title}>Quem Somos?</h2>
       <div className={styles.contentContainer}>
         <img
-          src="Images/lori-karine-lori.jpg"
+          src="/images/lori-karine-lori.jpg"
           alt="Litoral Microverdes"
           className={styles.image}
         />
