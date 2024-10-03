@@ -7,7 +7,6 @@ import WhoWeAreSection from '../components/WhoWeAreSection';
 export default function Home() {
   return (
     <div>
-      <Header />
       <HeroSection />
     </div>
   );
