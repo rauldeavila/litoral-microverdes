@@ -11,9 +11,7 @@ const HeroSection = () => {
           className={styles.heroImage}
         />
         <div className={styles.heroText}>
-          <p>FRESCO,</p>
-          <p>NUTRITIVO e</p>
-          <p>SABOROSO</p>
+          <p>Em construção...</p>
         </div>
       </div>
     </div>
