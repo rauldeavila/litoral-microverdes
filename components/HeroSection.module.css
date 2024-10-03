@@ -1,0 +1,59 @@
+.heroContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  padding-top: 72px;
+}
+
+.heroContent {
+  width: 100%;
+  max-width: 100%;
+  height: 80vh;
+  border-radius: 20px;
+  border: 2px solid #012904;
+  overflow: hidden;
+  position: relative;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* color: #e8ffb3; */
+  color: var(--light);
+  font-size: 10rem; /* Aumenta o tamanho do texto */
+  font-family: "Bebas Neue", sans-serif; /* Aplica a fonte Bebas Neue */
+  font-weight: bold;
+  text-align: center;
+  text-shadow:
+    -2px -2px 0 #000,
+    /* Sombra superior esquerda */ 2px -2px 0 #000,
+    /* Sombra superior direita */ -2px 2px 0 #000,
+    /* Sombra inferior esquerda */ 8px 8px 0 #000; /* Sombra inferior direita */
+  line-height: 0.8; /* Reduz o espaçamento entre as linhas */
+}
+
+.heroText p {
+  margin: 0;
+  position: relative; /* Necessário para que o z-index funcione */
+}
+
+.heroText p:nth-child(1) {
+  z-index: 3; /* Define o z-index do primeiro <p> */
+}
+
+.heroText p:nth-child(2) {
+  z-index: 2; /* Define o z-index do segundo <p> */
+}
+
+.heroText p:nth-child(3) {
+  z-index: 1; /* Define o z-index do terceiro <p> */
+}

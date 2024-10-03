@@ -1,0 +1,46 @@
+.whoWeAreSection {
+  padding: 50px 20px;
+  background-color: var(--white);
+  text-align: center;
+}
+
+.title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 4rem;
+  color: var(--black);
+  margin-bottom: 40px;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: left;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .contentContainer {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+}
+
+.text {
+  font-family: "Inter", sans-serif;
+  font-size: 1.2rem;
+  color: var(--black);
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.text p {
+  margin-bottom: 20px;
+}

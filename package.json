@@ -1,5 +1,5 @@
 {
-  "name": "clone-tabnews",
+  "name": "litoral-microverdes",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,9 +11,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "framer-motion": "^11.11.0",
     "next": "^13.1.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.3.0"
   },
   "devDependencies": {
     "prettier": "^3.3.3"

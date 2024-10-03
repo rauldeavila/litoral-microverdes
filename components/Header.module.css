@@ -1,0 +1,91 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  /* background-color: #d7ff81;*/
+  /* background-color: #cdff84;  */
+  /* background-color: #e3ff9e; */
+  background: var(--light);
+  /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat; 
+  background-size: 400px 400px; 
+  background-attachment: fixed;  */
+  color: var(--black);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 1000;
+}
+
+.leftMenu {
+  display: flex;
+  gap: 20px;
+  align-items: center; /* Garante que os links fiquem alinhados verticalmente */
+  margin-top: 1vh;
+}
+
+.logoContainer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center; /* Garante que o logo esteja centralizado verticalmente */
+}
+
+.logo {
+  height: 60px; /* Ajuste o tamanho da logo conforme necessário */
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center; /* Garante que a lupa e o input fiquem alinhados verticalmente */
+  position: relative;
+  margin-left: auto;
+  margin-top: 1vh;
+  z-index: 1001; /* Para que o header fique sobre outros elementos da página */
+}
+
+.searchInputContainer {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center; /* Garante o alinhamento vertical do input */
+}
+
+.searchInput {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 8px;
+}
+
+.link {
+  color: var(--black);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px; /* Para dar espaço ao underline */
+  font-weight: bold; /* Adiciona negrito aos links */
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+}

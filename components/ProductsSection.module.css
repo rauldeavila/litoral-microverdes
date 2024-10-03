@@ -1,0 +1,40 @@
+.productsSection {
+  padding: 50px 20px; /* Espaçamento em volta da seção */
+  padding-top: 0px;
+  margin-top: 0px;
+  text-align: center;
+  background-color: var(--light); /* Cor de fundo */
+}
+
+.title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 4rem;
+  color: var(--black);
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+.productsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.productCard {
+  background-color: var(--white);
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 1.5rem;
+  color: var(--black);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.productCard:hover {
+  transform: scale(1.05); /* Aumenta o produto ao passar o mouse */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra ao passar o mouse */
+}
