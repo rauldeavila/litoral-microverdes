@@ -6,10 +6,10 @@ const ProductsSection = () => {
     <section id="produtos" className={styles.productsSection}>
       <h2 className={styles.title}>Produtos</h2>
       <div className={styles.productsContainer}>
-        <div className={styles.productCard}>Beterraba (nunca tem)</div>
-        <div className={styles.productCard}>Couve</div>
-        <div className={styles.productCard}>Rúcula</div>
-        <div className={styles.productCard}>Cenoura</div>
+        <div className={styles.productCard}>Sunflower Shoots</div>
+        <div className={styles.productCard}>Pea Shoots</div>
+        <div className={styles.productCard}>Radish Microgreens</div>
+        <div className={styles.productCard}>Broccoli Microgreens</div>
       </div>
     </section>
   );

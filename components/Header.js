@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'; // Import useRef
 import { motion } from 'framer-motion';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaUser } from 'react-icons/fa';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -20,14 +20,17 @@ const Header = () => {
         <a href="#produtos" className={styles.link}>
           Produtos
         </a>
-        <a href="#" className={styles.link}>
+        <a href="#quem-somos" className={styles.link}>
           Quem Somos
         </a>
       </div>
       <div className={styles.logoContainer}>
-        <img src="/images/logo-transparent.png" alt="Litoral Microverdes" className={styles.logo} />
+        <img src="/images/microgreens-logo.png" alt="Microgreens Shop" className={styles.logo} />
+        <span className={styles.shopName}>Microgreens Shop</span>
       </div>
-      <div className={styles.searchContainer}>
+      <div className={styles.rightMenu}>
+        <FaShoppingCart style={{ cursor: 'pointer', color: '#145018', fontSize: '18px' }} />
+        <FaUser style={{ cursor: 'pointer', color: '#145018', fontSize: '18px' }} />
         <FaSearch
           onClick={toggleSearch}
           style={{ cursor: 'pointer', color: '#145018', fontSize: '18px' }}

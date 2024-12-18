@@ -4,34 +4,28 @@ import styles from './WhoWeAreSection.module.css';
 const WhoWeAreSection = () => {
   return (
     <section className={styles.whoWeAreSection}>
-      <h2 className={styles.title}>Quem Somos?</h2>
+      <h2 className={styles.title}>Who We Are</h2>
       <div className={styles.contentContainer}>
         <img
-          src="/images/lori-karine-lori.jpg"
-          alt="Litoral Microverdes"
+          src="/images/microgreens-shop.jpg"
+          alt="Microgreens Shop"
           className={styles.image}
         />
         <div className={styles.text}>
-          <p>Somos uma empresa especializada no cultivo de microverdes, PANCS e flores comestíveis.</p>
-          <p>Estamos localizados na cidade de Capão da Canoa, Litoral Norte do Rio Grande do Sul.</p>
+          <p>We are a company specialized in the cultivation of microgreens, edible flowers, and other specialty greens.</p>
+          <p>Located in the heart of the city, we are dedicated to providing fresh, nutritious, and high-quality microgreens to our community.</p>
           <p>
-            Nossa missão é levar frescor, nutrição e sabor para a sua alimentação diária, através de
-            microverdes de alta qualidade, cultivados de forma sustentável.
+            Our mission is to bring freshness, nutrition, and flavor to your daily diet through sustainably grown microgreens.
           </p>
           <p>
-            Orgulhamo-nos de cultivar nossos microverdes com dedicação e cuidado, desde a seleção
-            das sementes até o momento da colheita, prezando sempre pela qualidade.
+            We take pride in cultivating our microgreens with care and dedication, from seed selection to harvest, ensuring the highest quality.
           </p>
           <p>
-            Queremos inspirar sua criatividade culinária, seja você um chef de cozinha profissional ou
-            um entusiasta da culinária, nossos microverdes serão seus parceiros perfeitos na criação
-            de pratos.
+            Whether you are a professional chef or a culinary enthusiast, our microgreens will be your perfect partners in creating delicious dishes.
           </p>
           <p>
-            Missão:
-            Nossa missão é fornecer microverdes frescos, nutritivos e de alta qualidade,
-            cultivados de forma sustentável, para enriquecer a alimentação, promover a saúde e o bem-estar,
-            além de claro, inspirar a criatividade culinária.
+            Mission:
+            Our mission is to provide fresh, nutritious, and high-quality microgreens, grown sustainably, to enrich diets, promote health and well-being, and inspire culinary creativity.
           </p>
         </div>
       </div>

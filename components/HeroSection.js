@@ -11,7 +11,9 @@ const HeroSection = () => {
           className={styles.heroImage}
         />
         <div className={styles.heroText}>
-          <p>Em construção</p>
+          <p>Fresh Microgreens Delivered to Your Door</p>
+          <button className={styles.heroButton}>Shop Now</button>
+          <p className={styles.trialText}>Free Delivery for First Order</p>
         </div>
       </div>
     </div>
