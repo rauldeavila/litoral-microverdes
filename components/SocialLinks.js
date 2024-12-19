@@ -3,7 +3,7 @@ import { WhatsAppIcon } from './WhatsAppIcon';
 
 export function SocialLinks({ onWhatsAppClick }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col md:flex-row gap-4">
       <a
         href="https://instagram.com/litoralmicroverdes"
         target="_blank"
