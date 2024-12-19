@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-
 export function ImageCarousel({ images }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -15,7 +14,7 @@ export function ImageCarousel({ images }) {
 
   return (
     <div className="border-2 border-black w-full bg-gradient-to-br from-green-600 to-green-800 rounded-3xl overflow-hidden">
-      <div className="relative h-64">
+      <div className="relative h-64 md:h-[400px] lg:h-[500px]">
         <style jsx global>{`
           @keyframes zoomInAnimation {
             0% {
@@ -66,9 +65,8 @@ export function ImageCarousel({ images }) {
                 src={image}
                 alt={`Carousel Image ${index + 1}`}
                 fill
-                className={`object-cover ${index === currentImageIndex ? (isEven ? 'zoom-in' : 'zoom-out') : ''
-                  }`}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className={`object-cover ${index === currentImageIndex ? (isEven ? 'zoom-in' : 'zoom-out') : ''}`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 66vw"
                 priority={index === 0}
               />
             </div>
