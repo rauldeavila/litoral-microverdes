@@ -33,7 +33,7 @@ const AnimatedTitle = () => {
                C 1 85, 5 105, 20 120
                C 35 135, 60 130, 75 115
                C 85 105, 90 90, 88 78
-               C 86 65, 80 55, 50 45"
+               C 86 65, 80 55, 65 45"
             fill="none"
             stroke="#A3E635"
             strokeWidth="4"
