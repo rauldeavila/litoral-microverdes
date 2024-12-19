@@ -9,7 +9,7 @@ const AnimatedTitle = () => {
         <span className="relative z-[100]">
           frescos
           <motion.div
-            className="absolute -z-50 bottom-0 left-0 h-3 bg-orange-400"
+            className="absolute -z-50 bottom-0 left-0 h-3 bg-lime-400"
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: '100%', opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -31,7 +31,7 @@ const AnimatedTitle = () => {
             cy="80"
             r="45"
             fill="none"
-            stroke="#FB923C"
+            stroke="#A3E635"
             strokeWidth="4"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
