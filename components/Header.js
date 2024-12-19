@@ -22,7 +22,6 @@ export function Header({ onWhatsAppClick }) {
           <span className="text-green-500">
             <WhatsAppIcon />
           </span>
-          <span>Contato</span>
         </div>
       </button>
     </header>
