@@ -22,7 +22,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#B5FDB4] p-4 flex flex-col items-center">
+    <div className="min-h-screen bg-[#f1f1f1] p-4 flex flex-col items-center">
       <Header onWhatsAppClick={handleWhatsAppClick} />
 
       <main className="w-full max-w-md flex-1 flex flex-col items-center justify-center gap-8 -mt-50">
