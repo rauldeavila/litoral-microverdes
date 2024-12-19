@@ -1,55 +1,30 @@
-import React, { useState, useRef } from 'react'; // Import useRef
-import { motion } from 'framer-motion';
-import { FaSearch } from 'react-icons/fa';
-import styles from './Header.module.css';
+import React from 'react';
+import Image from 'next/image';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
-const Header = () => {
-  const [isSearchVisible, setSearchVisible] = useState(false);
-  const inputRef = useRef(null); // Definindo o inputRef
-
-  const toggleSearch = () => {
-    setSearchVisible(!isSearchVisible);
-    if (!isSearchVisible) {
-      setTimeout(() => inputRef.current?.focus(), 300); // Foca no input após a animação
-    }
-  };
-
+export function Header({ onWhatsAppClick }) {
   return (
-    <header className={styles.header}>
-      <div className={styles.leftMenu}>
-        <a href="#produtos" className={styles.link}>
-          Produtos
-        </a>
-        <a href="#" className={styles.link}>
-          Quem Somos
-        </a>
-      </div>
-      <div className={styles.logoContainer}>
-        <img src="/images/logo-transparent.png" alt="Litoral Microverdes" className={styles.logo} />
-      </div>
-      <div className={styles.searchContainer}>
-        <FaSearch
-          onClick={toggleSearch}
-          style={{ cursor: 'pointer', color: '#145018', fontSize: '18px' }}
+    <header className="w-full max-w-md flex items-center justify-between py-4 relative z-10">
+      <div className="flex items-center gap-2">
+        <Image
+          src="/images/logo-transparent.png"
+          alt="Microverdes Logo"
+          width={150}
+          height={150}
+          className="rounded-xl"
         />
-        <motion.div
-          initial={{ opacity: 0, width: 0 }}
-          animate={{ opacity: isSearchVisible ? 1 : 0, width: isSearchVisible ? '150px' : 0 }}
-          transition={{ duration: 0.5 }}
-          className={styles.searchInputContainer}
-        >
-          {isSearchVisible && (
-            <input
-              type="text"
-              placeholder="Pesquisar"
-              className={styles.searchInput}
-              onBlur={toggleSearch}
-            />
-          )}
-        </motion.div>
       </div>
+      <button
+        onClick={onWhatsAppClick}
+        className="flex items-center justify-between px-4 py-2 bg-white rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:bg-green-50 relative z-10"
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-green-500">
+            <WhatsAppIcon />
+          </span>
+          <span>Contato</span>
+        </div>
+      </button>
     </header>
   );
-};
-
-export default Header;
+}
