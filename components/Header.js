@@ -16,7 +16,7 @@ export function Header({ onWhatsAppClick }) {
       </div>
       <button
         onClick={onWhatsAppClick}
-        className="flex items-center justify-between px-4 py-2 bg-white rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:bg-green-50 relative z-10"
+        className="flex items-center justify-between px-4 py-2 bg-white rounded-full shadow-xs hover:shadow-md transition-all duration-300 hover:bg-green-50 relative z-10"
       >
         <div className="flex items-center gap-2">
           <span className="text-green-500">

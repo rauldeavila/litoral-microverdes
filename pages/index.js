@@ -25,7 +25,7 @@ export default function Home() {
       <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl">
         <Header onWhatsAppClick={handleWhatsAppClick} />
 
-        <main className="w-full flex flex-col items-center justify-center gap-8 -mt-50">
+        <main className="w-full flex flex-col items-center justify-center gap-8">
           <AnimatedTitle />
 
           <CTAButton onClick={handleWhatsAppClick} />
