@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 
 const AnimatedTitle = () => {
   return (
-    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-tight text-green-900">
+    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-tight md:leading-none text-green-900">
       <span className="inline-block">
         Microverdes{' '}
-        <span className="relative z-[100]">
+        <span className="relative z-100">
           frescos
           <motion.div
             className="absolute -z-50 bottom-0 left-0 h-3 md:h-4 lg:h-5 bg-lime-400"
@@ -19,7 +19,7 @@ const AnimatedTitle = () => {
       <br />
       Produção local
       <br />
-      <span className="relative z-[100] inline-block">
+      <span className="relative z-100 inline-block">
         Sem agrotóxicos
         <motion.svg
           className="absolute -z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[110%] h-[150%]"

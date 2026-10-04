@@ -13,7 +13,7 @@ export function ImageCarousel({ images }) {
   }, [images.length]);
 
   return (
-    <div className="border-2 border-black w-full bg-gradient-to-br from-green-600 to-green-800 rounded-3xl overflow-hidden">
+    <div className="border-2 border-black w-full bg-linear-to-br from-green-600 to-green-800 rounded-3xl overflow-hidden">
       <div className="relative h-64 md:h-[400px] lg:h-[500px]">
         <style jsx global>{`
           @keyframes zoomInAnimation {
