@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  SanityApp,
+  SDKProvider,
   useClient,
   useCurrentUser,
   useLogOut,
@@ -29,12 +29,14 @@ const inputClass =
 
 export default function CatalogDashboard() {
   return (
-    <SanityApp
+    // SanityApp redirects hosted apps to Sanity's Dashboard. The base provider
+    // keeps the same auth boundary and session handling on our own domain.
+    <SDKProvider
       config={config}
       fallback={<div className="p-8 text-green-900">Conectando ao painel…</div>}
     >
       <Editor />
-    </SanityApp>
+    </SDKProvider>
   );
 }
 

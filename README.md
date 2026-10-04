@@ -59,6 +59,11 @@ As imagens são entregues pelo CDN do Sanity com recorte quadrado,
 sem passar pela otimização de imagens da Vercel. O SDK é carregado
 apenas na rota administrativa.
 
+O painel hospedado na Vercel usa o `SDKProvider` exportado pelo SDK, mantendo
+a autenticação oficial. `SanityApp` redireciona aplicações fora de localhost
+para o Dashboard do Sanity. Como o provider é marcado como interno pelo pacote,
+o SDK está fixado em 3.7.0; valide login e retorno no domínio Vercel ao atualizar.
+
 ### Plano gratuito
 
 A integração usa somente o dataset público, assets, consultas e mutações da API
