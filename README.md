@@ -1,6 +1,7 @@
 # Litoral Microverdes
 
-Site em Next.js, React e Tailwind CSS. Requer Node.js 20.9 ou superior.
+Site em Next.js, React e Tailwind CSS. Usa Node.js 24.x, definido em
+`package.json` para os builds e deploys na Vercel.
 
 ```sh
 npm ci
