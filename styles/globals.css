@@ -41,16 +41,6 @@
   background: #e5ebdd;
 }
 
-.carousel-window:focus-within .carousel-track {
-  animation-play-state: paused;
-}
-
-@media (hover: hover) {
-  .carousel-window:hover .carousel-track {
-    animation-play-state: paused;
-  }
-}
-
 @keyframes carousel-scroll {
   to {
     transform: translateX(-50%);
@@ -65,8 +55,7 @@
   .carousel-track {
     animation: none;
   }
-  .carousel-group[aria-hidden="true"],
-  .carousel-controls {
+  .carousel-group[aria-hidden="true"] {
     display: none;
   }
   .carousel-frame {
