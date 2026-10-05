@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { dataset, projectId } from "../lib/sanity-config";
 import { moveProduct, publishCatalog } from "../lib/catalog-editor.mjs";
+import { catalogCopyFields, normalizeCatalogCopy } from "../lib/catalog.mjs";
 
 const buttonClass =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-green-900/20 bg-white px-4 py-2.5 text-sm font-semibold text-green-950 hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-40";
@@ -29,6 +30,7 @@ export default function CatalogDashboard() {
 
 function Editor({ client, user, logOut }) {
   const [products, setProducts] = useState([]);
+  const [pageCopy, setPageCopy] = useState(() => normalizeCatalogCopy());
   const [revision, setRevision] = useState(null);
   const [selected, setSelected] = useState(null);
   const [status, setStatus] = useState("loading");
@@ -59,6 +61,7 @@ function Editor({ client, user, logOut }) {
       if (!mounted.current) return;
       const items = document?.products || [];
       setProducts(items);
+      setPageCopy(normalizeCatalogCopy(document?.pageCopy));
       setRevision(document?._rev || null);
       setSelected(items[0]?._key || null);
       setDirty(false);
@@ -104,6 +107,12 @@ function Editor({ client, user, logOut }) {
         product._key === selected ? { ...product, ...values } : product,
       ),
     );
+  }
+  function editPageCopy(name, value) {
+    setPageCopy((copy) => ({ ...copy, [name]: value }));
+    setDirty(true);
+    setNotice("");
+    setError("");
   }
   function add() {
     const product = {
@@ -194,9 +203,15 @@ function Editor({ client, user, logOut }) {
     setError("");
     setNotice("");
     try {
-      const document = await publishCatalog(client, products, revision);
+      const document = await publishCatalog(
+        client,
+        products,
+        revision,
+        pageCopy,
+      );
       if (!mounted.current) return;
       setProducts(document.products);
+      setPageCopy(normalizeCatalogCopy(document.pageCopy));
       setRevision(document._rev);
       setDirty(false);
       setNotice(
@@ -326,6 +341,57 @@ function Editor({ client, user, logOut }) {
           >
             {notice}
           </p>
+        )}
+        {status !== "loading" && status !== "error" && (
+          <section
+            aria-labelledby="page-copy-title"
+            className="mb-6 rounded-2xl border border-green-900/10 bg-white p-5 md:p-6"
+          >
+            <h2
+              id="page-copy-title"
+              className="text-lg font-semibold text-green-950"
+            >
+              Textos da página
+            </h2>
+            <p className="mt-2 text-sm text-gray-500">
+              Edite a apresentação do catálogo. Os textos são atualizados ao
+              publicar alterações.
+            </p>
+            <fieldset
+              disabled={busy}
+              className="mt-5 grid gap-5 md:grid-cols-2"
+            >
+              <legend className="sr-only">Apresentação do catálogo</legend>
+              {catalogCopyFields.map(({ name, label, maxLength }) => (
+                <label
+                  key={name}
+                  className={`block text-sm font-medium ${name === "description" ? "md:col-span-2" : ""}`}
+                >
+                  {label}
+                  {name === "description" ? (
+                    <textarea
+                      value={pageCopy[name]}
+                      maxLength={maxLength}
+                      rows={3}
+                      className={`${inputClass} resize-y`}
+                      onChange={(event) =>
+                        editPageCopy(name, event.target.value)
+                      }
+                    />
+                  ) : (
+                    <input
+                      value={pageCopy[name]}
+                      maxLength={maxLength}
+                      className={inputClass}
+                      onChange={(event) =>
+                        editPageCopy(name, event.target.value)
+                      }
+                    />
+                  )}
+                </label>
+              ))}
+            </fieldset>
+          </section>
         )}
         {status === "loading" ? (
           <p role="status" className="py-12 text-center">

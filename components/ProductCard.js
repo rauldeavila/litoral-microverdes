@@ -1,12 +1,12 @@
-import { ArrowUpRight } from "lucide-react";
+import { whatsappUrl } from "../lib/contact";
 
-export function ProductCard({ product, priority = false, onViewProduct }) {
+export function ProductCard({ product, priority = false }) {
   return (
     <article
-      className="group flex h-full flex-col"
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-green-900/15 bg-[#e5ebdd]"
       aria-labelledby={`product-${product.id}`}
     >
-      <div className="aspect-square overflow-hidden rounded-2xl bg-[#e8ece4]">
+      <div className="aspect-square overflow-hidden bg-[#e8ece4]">
         <img
           src={product.imageUrl}
           alt={product.imageAlt || product.name}
@@ -17,10 +17,10 @@ export function ProductCard({ product, priority = false, onViewProduct }) {
           className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.03]"
         />
       </div>
-      <div className="flex flex-1 flex-col pt-5">
+      <div className="flex flex-1 flex-col p-5 md:p-6">
         <h2
           id={`product-${product.id}`}
-          className="text-xl font-semibold leading-snug text-green-950 md:text-2xl"
+          className="break-words text-xl font-semibold leading-snug text-green-950 md:text-2xl"
         >
           {product.name}
         </h2>
@@ -31,16 +31,15 @@ export function ProductCard({ product, priority = false, onViewProduct }) {
           )}{" "}
           g
         </p>
-        <button
-          type="button"
-          disabled={!onViewProduct}
-          onClick={onViewProduct ? () => onViewProduct(product) : undefined}
-          aria-label={`Ver produto: ${product.name}`}
-          title={!onViewProduct ? "Detalhes do produto em breve" : undefined}
-          className="mt-auto flex w-full items-center justify-between rounded-full border border-green-900 px-5 py-3 text-sm font-semibold text-green-900 transition-colors enabled:hover:bg-green-900 enabled:hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-800 disabled:cursor-not-allowed disabled:opacity-60"
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Comprar ${product.name} pelo WhatsApp`}
+          className="mt-auto flex w-full items-center justify-center rounded-full bg-green-900 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-800"
         >
-          Ver produto <ArrowUpRight size={18} aria-hidden="true" />
-        </button>
+          Comprar
+        </a>
       </div>
     </article>
   );

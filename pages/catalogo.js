@@ -3,9 +3,10 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Sprout } from "lucide-react";
 import { Header } from "../components/Header";
 import { ProductCard } from "../components/ProductCard";
-import { getCatalogProducts } from "../lib/sanity";
+import { getCatalog } from "../lib/sanity";
+import { whatsappUrl } from "../lib/contact";
 
-export default function Catalogo({ products }) {
+export default function Catalogo({ products, pageCopy }) {
   return (
     <>
       <Head>
@@ -19,11 +20,7 @@ export default function Catalogo({ products }) {
         <div className="mx-auto max-w-6xl">
           <Header
             onWhatsAppClick={() =>
-              window.open(
-                "https://wa.me/5551998189818",
-                "_blank",
-                "noopener,noreferrer",
-              )
+              window.open(whatsappUrl, "_blank", "noopener,noreferrer")
             }
           />
           <main id="catalogo">
@@ -35,15 +32,14 @@ export default function Catalogo({ products }) {
             </Link>
             <div className="flex flex-col justify-between gap-6 border-b border-green-900/15 pb-8 md:flex-row md:items-end md:pb-10">
               <div className="max-w-2xl">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-green-800">
-                  Cultivados perto de você
+                <p className="mb-3 break-words text-xs font-semibold uppercase tracking-[0.18em] text-green-800">
+                  {pageCopy.eyebrow}
                 </p>
-                <h1 className="text-4xl font-bold tracking-tight text-green-950 md:text-6xl">
-                  Nossos microverdes
+                <h1 className="break-words text-4xl font-bold tracking-tight text-green-950 md:text-6xl">
+                  {pageCopy.title}
                 </h1>
-                <p className="mt-5 max-w-xl text-base leading-relaxed text-gray-600 md:text-lg">
-                  Pequenos no tamanho, cheios de vida. Conheça as variedades que
-                  cultivamos para levar frescor à sua mesa.
+                <p className="mt-5 max-w-xl whitespace-pre-line break-words text-base leading-relaxed text-gray-600 md:text-lg">
+                  {pageCopy.description}
                 </p>
               </div>
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e5ebdd] px-4 py-2 text-sm text-green-900">
@@ -83,7 +79,7 @@ export default function Catalogo({ products }) {
                 </p>
                 <a
                   className="mt-6 inline-flex items-center gap-3 rounded-full bg-green-900 px-6 py-3 font-semibold text-white hover:bg-green-800"
-                  href="https://wa.me/5551998189818"
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -104,5 +100,5 @@ export default function Catalogo({ products }) {
 }
 
 export async function getStaticProps() {
-  return { props: { products: await getCatalogProducts() }, revalidate: 60 };
+  return { props: await getCatalog(), revalidate: 60 };
 }

@@ -26,7 +26,12 @@ conforme o [guia oficial de migração](https://tailwindcss.com/docs/upgrade-gui
 - `/admin`: painel próprio em português, integrado ao SDK oficial do Sanity.
   A edição exige uma conta com acesso ao projeto. Cada usuário usa uma sessão
   individual; não há senhas próprias nem token compartilhado de escrita.
-- O botão **Ver produto** está desativado até a definição do fluxo de detalhes.
+- Os cards unem foto e informações em um bloco com botão **Comprar**, que abre
+  o mesmo WhatsApp usado pelo site. O endereço fica em `lib/contact.js`.
+- **Textos da página** no painel permite editar chamada acima do título, título
+  principal e subtítulo. Catálogos anteriores mantêm os textos originais até a
+  primeira edição; os novos textos são publicados junto com os produtos, usando
+  a mesma proteção contra alterações concorrentes e o cache de 60 segundos.
 
 O projeto `uoowndbg` e o dataset público `production` estão definidos em
 `lib/sanity-config.js`. São identificadores públicos, não credenciais, e funcionam

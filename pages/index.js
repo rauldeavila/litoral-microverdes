@@ -4,6 +4,7 @@ import { ImageCarousel } from '../components/ImageCarousel';
 import { CTAButton } from '../components/CTAButton';
 import { SocialLinks } from '../components/SocialLinks';
 import AnimatedTitle from '../components/AnimatedTitle';
+import { whatsappUrl } from '../lib/contact';
 
 export default function Home() {
   const carouselImages = [
@@ -17,7 +18,7 @@ export default function Home() {
   ];
 
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/5551998189818', '_blank');
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
