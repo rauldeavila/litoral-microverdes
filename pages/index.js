@@ -7,6 +7,15 @@ import AnimatedTitle from "../components/AnimatedTitle";
 import { CatalogSection } from "../components/CatalogSection";
 import { whatsappUrl } from "../lib/contact";
 import { getCatalog } from "../lib/sanity";
+import {
+  siteUrl,
+  siteName,
+  homeTitle,
+  homeDescription,
+  socialImage,
+  socialImageAlt,
+  homeStructuredData,
+} from "../lib/seo";
 
 const carouselImages = [
   "/images/carousel/image-1.png",
@@ -26,12 +35,33 @@ export default function Home({ products, pageCopy }) {
   return (
     <>
       <Head>
-        <title>Litoral Microverdes | Frescos, locais e sem agrotóxicos</title>
-        <meta
-          name="description"
-          content="Conheça os microverdes da Litoral: produção local, frescos e sem agrotóxicos. Veja nossas variedades e peça pelo WhatsApp."
-        />
+        <title>{homeTitle}</title>
+        <meta name="description" content={homeDescription} />
+        <link rel="canonical" href={siteUrl} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="pt_BR" />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:url" content={siteUrl} />
+        <meta property="og:title" content={homeTitle} />
+        <meta property="og:description" content={homeDescription} />
+        <meta property="og:image" content={socialImage} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1786" />
+        <meta property="og:image:height" content="1026" />
+        <meta property="og:image:alt" content={socialImageAlt} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={homeTitle} />
+        <meta name="twitter:description" content={homeDescription} />
+        <meta name="twitter:image" content={socialImage} />
+        <meta name="twitter:image:alt" content={socialImageAlt} />
       </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(homeStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="min-h-screen bg-[#f1f1f1] pt-4 md:pt-8 lg:pt-12">
         <div className="mx-auto w-full max-w-md px-4 md:max-w-2xl md:px-8 lg:max-w-4xl lg:px-12 xl:max-w-6xl">
           <Header onWhatsAppClick={handleWhatsAppClick} />

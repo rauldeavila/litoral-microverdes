@@ -20,6 +20,22 @@ O Tailwind CSS 4 usa `@tailwindcss/postcss`; o tema está em
 `styles/globals.css`. Requer Safari 16.4+, Chrome 111+ ou Firefox 128+,
 conforme o [guia oficial de migração](https://tailwindcss.com/docs/upgrade-guide).
 
+## Favicon e SEO
+
+- O favicon e o ícone para dispositivos Apple usam a imagem
+  `public/images/logo-transparent-small.png` (273 × 273), com URL relativa
+  válida em localhost e produção. `/favicon.ico` também entrega essa imagem PNG.
+- `lib/seo.js` centraliza o título, descrição regional, URL canônica e dados
+  estruturados Organization/WebSite. A home entrega esses dados no HTML inicial,
+  junto com metadados Open Graph/Twitter e uma foto real para compartilhamentos.
+- `/robots.txt` divulga `/sitemap.xml`, que contém apenas a home canônica.
+  A seção do catálogo não é uma página separada e o painel não entra no sitemap.
+- O painel usa `noindex` no HTML e no cabeçalho HTTP. Deploys de preview da Vercel
+  recebem `X-Robots-Tag: noindex, nofollow` em todas as rotas. O robots.txt permite
+  rastreamento para que os buscadores consigam ler essas instruções.
+- Não há preços, avaliações ou endereço físico inventados nos dados estruturados.
+  Novas informações podem ser incluídas quando confirmadas pelos donos.
+
 ## Catálogo e painel
 
 - `/#catalogo`: catálogo público na home, abaixo das redes sociais, com foto,

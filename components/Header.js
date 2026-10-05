@@ -13,10 +13,10 @@ export function Header({ onWhatsAppClick }) {
       >
         <Image
           src="/images/logo-transparent.png"
-          alt="Microverdes Logo"
+          alt="Litoral Microverdes"
           width={150}
-          height={150}
-          className="rounded-xl"
+          height={48}
+          className="h-auto rounded-xl"
         />
       </Link>
       <nav aria-label="Navegação principal" className="flex items-center gap-4">
