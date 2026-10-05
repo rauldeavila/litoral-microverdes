@@ -38,6 +38,7 @@ function Editor({ client, user, logOut }) {
   const [dragged, setDragged] = useState(null);
   const [removalKey, setRemovalKey] = useState(null);
   const mounted = useRef(true);
+  const uploading = useRef(false);
   const imageBuilder = useMemo(
     () => createImageUrlBuilder({ projectId, dataset }),
     [],
@@ -122,10 +123,8 @@ function Editor({ client, user, logOut }) {
     setSelected(items[0]?._key || null);
     setRemovalKey(null);
   }
-  async function upload(event) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
+  async function upload(file) {
+    if (!file || busy || uploading.current || !selected) return;
     if (
       !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(
         file.type,
@@ -135,8 +134,10 @@ function Editor({ client, user, logOut }) {
       setError("Escolha uma foto JPG, PNG, WebP ou AVIF de até 10 MB.");
       return;
     }
+    uploading.current = true;
     setStatus("uploading");
     setError("");
+    setNotice("");
     const key = selected;
     try {
       const asset = await client.assets.upload("image", file, {
@@ -164,8 +165,29 @@ function Editor({ client, user, logOut }) {
         "Não foi possível enviar a foto. Verifique sua conexão e sua permissão de edição.",
       );
     } finally {
+      uploading.current = false;
       if (mounted.current) setStatus("ready");
     }
+  }
+  function pastePhoto(event) {
+    event.preventDefault();
+    if (busy || uploading.current) return;
+    const clipboard = event.clipboardData;
+    const file =
+      Array.from(clipboard.files || []).find((item) =>
+        item.type.startsWith("image/"),
+      ) ||
+      Array.from(clipboard.items || [])
+        .find((item) => item.kind === "file" && item.type.startsWith("image/"))
+        ?.getAsFile();
+    if (!file) {
+      setNotice("");
+      setError(
+        "Nenhuma imagem encontrada. Copie uma imagem e cole novamente na área da foto.",
+      );
+      return;
+    }
+    upload(file);
   }
   async function publish() {
     setStatus("saving");
@@ -447,23 +469,39 @@ function Editor({ client, user, logOut }) {
                       Editar produto
                     </legend>
                     <div>
-                      {photo(active) ? (
-                        <img
-                          src={photo(active)}
-                          alt={
-                            active.image?.alt ||
-                            active.name ||
-                            "Foto do produto"
-                          }
-                          width={600}
-                          height={600}
-                          className="aspect-square w-full rounded-xl object-cover"
-                        />
-                      ) : (
-                        <div className="flex aspect-square items-center justify-center rounded-xl bg-[#e8ece4] text-green-700">
-                          <Sprout size={48} />
-                        </div>
-                      )}
+                      <button
+                        type="button"
+                        aria-label="Área da foto: clique e cole uma imagem"
+                        aria-describedby="photo-paste-help"
+                        onClick={(event) => event.currentTarget.focus()}
+                        onPaste={pastePhoto}
+                        className="block w-full overflow-hidden rounded-xl focus:outline-2 focus:outline-offset-4 focus:outline-green-700 disabled:cursor-wait"
+                      >
+                        {photo(active) ? (
+                          <img
+                            src={photo(active)}
+                            alt={
+                              active.image?.alt ||
+                              active.name ||
+                              "Foto do produto"
+                            }
+                            width={600}
+                            height={600}
+                            className="aspect-square w-full rounded-xl object-cover"
+                          />
+                        ) : (
+                          <span className="flex aspect-square items-center justify-center rounded-xl bg-[#e8ece4] text-green-700">
+                            <Sprout size={48} />
+                          </span>
+                        )}
+                      </button>
+                      <p
+                        id="photo-paste-help"
+                        className="mt-3 text-xs text-gray-600"
+                      >
+                        Clique na área da foto e cole uma imagem com ⌘V (Mac) ou
+                        Ctrl+V (Windows).
+                      </p>
                       <label
                         className={`${buttonClass} mt-3 w-full cursor-pointer`}
                       >
@@ -475,7 +513,11 @@ function Editor({ client, user, logOut }) {
                           type="file"
                           accept="image/jpeg,image/png,image/webp,image/avif"
                           className="sr-only"
-                          onChange={upload}
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            event.target.value = "";
+                            upload(file);
+                          }}
                         />
                       </label>
                       <p className="mt-2 text-xs text-gray-500">
