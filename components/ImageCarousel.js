@@ -1,78 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState } from "react";
+import Image from "next/image";
+import { Pause, Play } from "lucide-react";
 
 export function ImageCarousel({ images }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [images.length]);
+  const [paused, setPaused] = useState(false);
 
   return (
-    <div className="border-2 border-black w-full bg-linear-to-br from-green-600 to-green-800 rounded-3xl overflow-hidden">
-      <div className="relative h-64 md:h-[400px] lg:h-[500px]">
-        <style jsx global>{`
-          @keyframes zoomInAnimation {
-            0% {
-              transform: scale(1);
-              opacity: 0;
-            }
-            10% {
-              opacity: 1;
-            }
-            100% {
-              transform: scale(1.1);
-              opacity: 1;
-            }
-          }
-
-          @keyframes zoomOutAnimation {
-            0% {
-              transform: scale(1.1);
-              opacity: 0;
-            }
-            10% {
-              opacity: 1;
-            }
-            100% {
-              transform: scale(1);
-              opacity: 1;
-            }
-          }
-
-          .zoom-in {
-            animation: zoomInAnimation 5s ease-out forwards;
-          }
-
-          .zoom-out {
-            animation: zoomOutAnimation 5s ease-out forwards;
-          }
-        `}</style>
-
-        {images.map((image, index) => {
-          const isEven = index % 2 === 0;
-          return (
+    <section className="w-full" aria-label="Fotos dos nossos microverdes">
+      <div
+        className="carousel-window"
+        tabIndex={0}
+        aria-label="Galeria de fotos"
+      >
+        <div
+          className="carousel-track"
+          style={{ animationPlayState: paused ? "paused" : undefined }}
+        >
+          {[false, true].map((duplicate) => (
             <div
-              key={image}
-              className={`absolute inset-0 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
-              style={{ transition: 'opacity 1s ease-in-out' }}
+              key={String(duplicate)}
+              className="carousel-group"
+              aria-hidden={duplicate || undefined}
             >
-              <Image
-                src={image}
-                alt={`Carousel Image ${index + 1}`}
-                fill
-                className={`object-cover ${index === currentImageIndex ? (isEven ? 'zoom-in' : 'zoom-out') : ''}`}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 66vw"
-                priority={index === 0}
-              />
+              {images.map((image, index) => (
+                <div className="carousel-frame" key={image}>
+                  <Image
+                    src={image}
+                    alt={
+                      duplicate
+                        ? ""
+                        : `Microverdes da Litoral — foto ${index + 1}`
+                    }
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 857px) 240px, (max-width: 1714px) 28vw, 480px"
+                    loading="eager"
+                  />
+                </div>
+              ))}
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
-    </div>
+      <div className="carousel-controls mx-auto mt-3 flex max-w-6xl justify-end px-4 md:px-8">
+        <button
+          type="button"
+          onClick={() => setPaused((value) => !value)}
+          aria-pressed={paused}
+          aria-label="Pausar movimento das fotos"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm text-green-900 hover:bg-green-900/5 focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          {paused ? (
+            <Play size={16} aria-hidden="true" />
+          ) : (
+            <Pause size={16} aria-hidden="true" />
+          )}
+          {paused ? "Continuar fotos" : "Pausar fotos"}
+        </button>
+      </div>
+    </section>
   );
 }

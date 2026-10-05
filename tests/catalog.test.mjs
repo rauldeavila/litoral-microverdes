@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { parse, evaluate } from "groq-js";
-import { catalogQuery, normalizeProducts } from "../lib/catalog.mjs";
+import {
+  catalogQuery,
+  normalizeProducts,
+  normalizeCatalogCopy,
+} from "../lib/catalog.mjs";
 
 const product = (key, extra = {}) => ({
   _key: key,
@@ -162,9 +166,70 @@ test("concurrent edits are rejected instead of overwriting another publication",
   await assert.rejects(publishCatalog(client, [editable("b")], null), {
     statusCode: 409,
   });
-  await publishCatalog(client, [editable("b")], "first");
-  await assert.rejects(publishCatalog(client, [editable("c")], "first"), {
-    statusCode: 409,
-  });
+  const copy = { ...normalizeCatalogCopy(), title: "Nosso novo título" };
+  await publishCatalog(client, [editable("b")], "first", copy);
+  await assert.rejects(
+    publishCatalog(client, [editable("c")], "first", {
+      ...copy,
+      title: "Edição atrasada",
+    }),
+    {
+      statusCode: 409,
+    },
+  );
   assert.equal(stored.products[0]._key, "b");
+  assert.equal(stored.pageCopy.title, "Nosso novo título");
+});
+
+test("older catalogs keep their original copy and invalid stored fields fall back independently", () => {
+  const original = normalizeCatalogCopy();
+  assert.equal(original.title, "Nossos microverdes");
+  assert.deepEqual(
+    normalizeCatalogCopy({
+      title: "  Da nossa horta  ",
+      eyebrow: null,
+      description: " ",
+    }),
+    { ...original, title: "Da nossa horta" },
+  );
+  assert.equal(
+    normalizeCatalogCopy({ title: "x".repeat(121) }).title,
+    original.title,
+  );
+});
+
+test("copy-only publication keeps hidden products and public query returns the edited headings", async () => {
+  const items = [editable("hidden")];
+  items[0].visible = false;
+  const copy = {
+    eyebrow: "  Nossa produção  ",
+    title: "Da horta à mesa",
+    description: "Frescor todo dia.",
+  };
+  let document;
+  const client = {
+    async create(value) {
+      document = value;
+      return value;
+    },
+  };
+  await publishCatalog(client, items, null, copy);
+  assert.deepEqual(document.products, items);
+  const result = await (
+    await evaluate(parse(catalogQuery), { dataset: [document] })
+  ).get();
+  assert.deepEqual(result.products, []);
+  assert.deepEqual(result.pageCopy, { ...copy, eyebrow: "Nossa produção" });
+  await assert.rejects(
+    publishCatalog(client, items, null, { ...copy, title: " " }),
+    /Título principal/,
+  );
+  await assert.rejects(
+    publishCatalog(client, items, null, {
+      ...copy,
+      description: "x".repeat(501),
+    }),
+    /Subtítulo/,
+  );
+  assert.equal(document.pageCopy.title, copy.title);
 });

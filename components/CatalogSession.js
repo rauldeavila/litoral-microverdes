@@ -167,7 +167,7 @@ export default function CatalogSession({ children }) {
           </div>
         )}
         <a
-          href="/catalogo"
+          href="/#catalogo"
           className="mt-7 inline-block text-sm text-green-900 underline"
         >
           Voltar ao catálogo
