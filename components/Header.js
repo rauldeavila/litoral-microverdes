@@ -21,7 +21,7 @@ export function Header({ onWhatsAppClick }) {
       </Link>
       <nav aria-label="Navegação principal" className="flex items-center gap-4">
         <Link
-          href="/catalogo"
+          href="/#catalogo"
           className="text-sm font-semibold text-green-900 underline-offset-4 hover:underline"
         >
           Catálogo

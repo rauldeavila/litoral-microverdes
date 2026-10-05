@@ -270,7 +270,7 @@ function Editor({ client, user, logOut }) {
               {user?.name}
             </span>
             <a
-              href="/catalogo"
+              href="/#catalogo"
               target="_blank"
               rel="noopener noreferrer"
               className={buttonClass}

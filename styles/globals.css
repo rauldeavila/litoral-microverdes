@@ -1,5 +1,79 @@
 @import "tailwindcss";
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.carousel-window {
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-window:focus-visible {
+  outline: 2px solid var(--color-green-800);
+  outline-offset: 4px;
+}
+
+.carousel-track {
+  display: flex;
+  width: max-content;
+  animation: carousel-scroll 56s linear infinite;
+}
+
+/* Each half includes its trailing gap so the loop has no jump or empty seam. */
+.carousel-group {
+  display: flex;
+  flex-shrink: 0;
+  min-width: 100vw;
+  gap: 16px;
+  padding-right: 16px;
+}
+
+.carousel-frame {
+  position: relative;
+  flex: 1 0 clamp(240px, 28vw, 480px);
+  width: clamp(240px, 28vw, 480px);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #e5ebdd;
+}
+
+.carousel-window:focus-within .carousel-track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  .carousel-window:hover .carousel-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes carousel-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-window {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+  }
+  .carousel-track {
+    animation: none;
+  }
+  .carousel-group[aria-hidden="true"],
+  .carousel-controls {
+    display: none;
+  }
+  .carousel-frame {
+    scroll-snap-align: start;
+  }
+}
+
 @theme {
   --animate-underline: underline 0.7s ease-out forwards;
   --animate-circle: circle 1s ease-out forwards;

@@ -18,12 +18,12 @@ export function ProductCard({ product, priority = false }) {
         />
       </div>
       <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h2
+        <h3
           id={`product-${product.id}`}
           className="break-words text-xl font-semibold leading-snug text-green-950 md:text-2xl"
         >
           {product.name}
-        </h2>
+        </h3>
         <p className="mb-5 mt-2 text-sm text-gray-600">
           Embalagem de{" "}
           {new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 }).format(
