@@ -41,7 +41,10 @@ credenciais: `http://localhost:3333`, o domínio de preview usado nos testes e
 
 Execute `npm run dev -- --hostname localhost --port 3333` para usar a origem local
 autorizada. No painel, entre com sua conta Sanity, adicione produtos e preencha nome,
-peso e foto. Arraste pela alça ou use as setas para definir a ordem. O controle
+peso e foto. Para colar uma imagem copiada, clique na área da foto e pressione
+⌘V no Mac ou Ctrl+V no Windows. O botão **Escolher foto** continua disponível;
+ambas as opções aceitam JPG, PNG, WebP ou AVIF de até 10 MB.
+Arraste pela alça ou use as setas para definir a ordem. O controle
 **Exibir no catálogo** permite ocultar produtos sem excluí-los. Clique em
 **Publicar alterações** para aplicar adições, alterações, exclusões e reordenações
 juntas. Alterações ainda não publicadas ficam apenas na tela; há um aviso ao sair.
