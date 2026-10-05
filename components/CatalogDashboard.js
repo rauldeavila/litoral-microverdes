@@ -36,6 +36,7 @@ function Editor({ client, user, logOut }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [dragged, setDragged] = useState(null);
+  const [removalKey, setRemovalKey] = useState(null);
   const mounted = useRef(true);
   const imageBuilder = useMemo(
     () => createImageUrlBuilder({ projectId, dataset }),
@@ -116,15 +117,10 @@ function Editor({ client, user, logOut }) {
     setSelected(product._key);
   }
   function remove() {
-    if (
-      !window.confirm(
-        `Remover ${active.name || "este produto"} do catálogo? A remoção só será aplicada quando você publicar.`,
-      )
-    )
-      return;
     const items = products.filter((product) => product._key !== selected);
     update(items);
     setSelected(items[0]?._key || null);
+    setRemovalKey(null);
   }
   async function upload(event) {
     const file = event.target.files?.[0];
@@ -542,13 +538,42 @@ function Editor({ client, user, logOut }) {
                       />
                       Exibir no catálogo
                     </label>
-                    <button
-                      type="button"
-                      onClick={remove}
-                      className="inline-flex items-center gap-2 text-sm font-medium text-red-700 hover:underline"
-                    >
-                      <Trash2 size={17} /> Remover produto
-                    </button>
+                    {removalKey === selected ? (
+                      <div
+                        className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm"
+                        role="group"
+                        aria-label="Confirmar remoção"
+                      >
+                        <p>
+                          Remover este produto? A remoção só será aplicada
+                          quando você publicar.
+                        </p>
+                        <div className="mt-3 flex gap-4">
+                          <button
+                            type="button"
+                            onClick={remove}
+                            className="font-semibold text-red-700 underline"
+                          >
+                            Confirmar remoção
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setRemovalKey(null)}
+                            className="text-gray-700 underline"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setRemovalKey(selected)}
+                        className="inline-flex items-center gap-2 text-sm font-medium text-red-700 hover:underline"
+                      >
+                        <Trash2 size={17} /> Remover produto
+                      </button>
+                    )}
                   </fieldset>
                 )}
               </section>
