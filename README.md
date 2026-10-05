@@ -24,8 +24,8 @@ conforme o [guia oficial de migração](https://tailwindcss.com/docs/upgrade-gui
 
 - `/catalogo`: catálogo público, com foto, nome e peso de cada embalagem.
 - `/admin`: painel próprio em português, integrado ao SDK oficial do Sanity.
-  A edição exige uma conta com acesso ao projeto. O SDK gerencia a sessão de
-  cada usuário usa uma sessão individual; não há senhas próprias nem token compartilhado de escrita.
+  A edição exige uma conta com acesso ao projeto. Cada usuário usa uma sessão
+  individual; não há senhas próprias nem token compartilhado de escrita.
 - O botão **Ver produto** está desativado até a definição do fluxo de detalhes.
 
 O projeto `uoowndbg` e o dataset público `production` estão definidos em
