@@ -26,8 +26,8 @@ conforme o [guia oficial de migração](https://tailwindcss.com/docs/upgrade-gui
   nome e peso de cada embalagem. O menu rola até essa seção; `/catalogo`
   redireciona permanentemente para `/#catalogo`, preservando links antigos.
 - A faixa de fotos da home ocupa toda a largura, com imagens de proporção 4:3
-  e movimento horizontal contínuo. Pausa ao passar o mouse, receber foco ou
-  pelo botão **Pausar fotos**. Com redução de movimento ativada no sistema,
+  e movimento horizontal contínuo, sem botão de pausa e sem parar ao passar
+  o mouse ou receber foco. Com redução de movimento ativada no sistema,
   vira uma galeria horizontal manual, sem animação automática.
 - `/admin`: painel próprio em português, integrado ao SDK oficial do Sanity.
   A edição exige uma conta com acesso ao projeto. Cada usuário usa uma sessão
