@@ -25,7 +25,7 @@ conforme o [guia oficial de migração](https://tailwindcss.com/docs/upgrade-gui
 - `/catalogo`: catálogo público, com foto, nome e peso de cada embalagem.
 - `/admin`: painel próprio em português, integrado ao SDK oficial do Sanity.
   A edição exige uma conta com acesso ao projeto. O SDK gerencia a sessão de
-  cada usuário; não há senhas próprias nem token compartilhado de escrita.
+  cada usuário usa uma sessão individual; não há senhas próprias nem token compartilhado de escrita.
 - O botão **Ver produto** está desativado até a definição do fluxo de detalhes.
 
 O projeto `uoowndbg` e o dataset público `production` estão definidos em
@@ -59,10 +59,12 @@ As imagens são entregues pelo CDN do Sanity com recorte quadrado,
 sem passar pela otimização de imagens da Vercel. O SDK é carregado
 apenas na rota administrativa.
 
-O painel hospedado na Vercel usa o `SDKProvider` exportado pelo SDK, mantendo
-a autenticação oficial. `SanityApp` redireciona aplicações fora de localhost
-para o Dashboard do Sanity. Como o provider é marcado como interno pelo pacote,
-o SDK está fixado em 3.7.0; valide login e retorno no domínio Vercel ao atualizar.
+O painel usa `@sanity/client` e os provedores de login oficiais do projeto,
+com o mesmo fluxo de sessão do Sanity Studio. A senha é informada apenas no
+provedor escolhido. Um estado aleatório vincula o retorno à aba que iniciou o
+login. A sessão temporária retorna no fragmento da URL, é removida do histórico
+e trocada por uma sessão pessoal limitada ao projeto, armazenada no navegador.
+Sair revoga essa sessão no Sanity. Sessões expiradas exigem novo login.
 
 ### Plano gratuito
 

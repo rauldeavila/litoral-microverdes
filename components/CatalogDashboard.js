@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  SDKProvider,
-  useClient,
-  useCurrentUser,
-  useLogOut,
-} from "@sanity/sdk-react";
+import CatalogSession from "./CatalogSession";
 import { createImageUrlBuilder } from "@sanity/image-url";
 import {
   ArrowDown,
@@ -18,10 +13,9 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import { apiVersion, dataset, projectId } from "../lib/sanity-config";
+import { dataset, projectId } from "../lib/sanity-config";
 import { moveProduct, publishCatalog } from "../lib/catalog-editor.mjs";
 
-const config = { projectId, dataset };
 const buttonClass =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-green-900/20 bg-white px-4 py-2.5 text-sm font-semibold text-green-950 hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-40";
 const inputClass =
@@ -29,21 +23,11 @@ const inputClass =
 
 export default function CatalogDashboard() {
   return (
-    // SanityApp redirects hosted apps to Sanity's Dashboard. The base provider
-    // keeps the same auth boundary and session handling on our own domain.
-    <SDKProvider
-      config={config}
-      fallback={<div className="p-8 text-green-900">Conectando ao painel…</div>}
-    >
-      <Editor />
-    </SDKProvider>
+    <CatalogSession>{(session) => <Editor {...session} />}</CatalogSession>
   );
 }
 
-function Editor() {
-  const client = useClient({ apiVersion });
-  const user = useCurrentUser();
-  const logOut = useLogOut();
+function Editor({ client, user, logOut }) {
   const [products, setProducts] = useState([]);
   const [revision, setRevision] = useState(null);
   const [selected, setSelected] = useState(null);
