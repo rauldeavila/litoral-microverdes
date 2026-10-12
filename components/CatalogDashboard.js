@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CatalogSession from "./CatalogSession";
+import { CategoryManager } from "./CategoryManager";
+import { BannerManager } from "./BannerManager";
 import { createImageUrlBuilder } from "@sanity/image-url";
 import {
   ArrowDown,
@@ -13,9 +15,19 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import { dataset, projectId } from "../lib/sanity-config";
+import {
+  dataset,
+  projectId,
+  catalogId,
+  isLocalPreview,
+} from "../lib/sanity-config";
 import { moveProduct, publishCatalog } from "../lib/catalog-editor.mjs";
-import { catalogCopyFields, normalizeCatalogCopy } from "../lib/catalog.mjs";
+import {
+  catalogCopyFields,
+  normalizeCatalogCopy,
+  loadEditableCatalog,
+  prepareCatalogForEditing,
+} from "../lib/catalog.mjs";
 
 const buttonClass =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-green-900/20 bg-white px-4 py-2.5 text-sm font-semibold text-green-950 hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-40";
@@ -30,6 +42,9 @@ export default function CatalogDashboard() {
 
 function Editor({ client, user, logOut }) {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [banners, setBanners] = useState([]);
+  const [section, setSection] = useState("products");
   const [pageCopy, setPageCopy] = useState(() => normalizeCatalogCopy());
   const [revision, setRevision] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -55,14 +70,17 @@ function Editor({ client, user, logOut }) {
     try {
       // Sanity checks the user's effective permissions (including inherited
       // organization roles) on every upload and mutation.
-      const document = await client
-        .withConfig({ useCdn: false, perspective: "published" })
-        .getDocument("catalog");
+      const document = await loadEditableCatalog(
+        client.withConfig({ useCdn: false, perspective: "published" }),
+        catalogId,
+      );
       if (!mounted.current) return;
       const items = document?.products || [];
       setProducts(items);
+      setCategories(document.categories);
+      setBanners(document.banners);
       setPageCopy(normalizeCatalogCopy(document?.pageCopy));
-      setRevision(document?._rev || null);
+      setRevision(document.revision);
       setSelected(items[0]?._key || null);
       setDirty(false);
       setStatus("ready");
@@ -95,6 +113,18 @@ function Editor({ client, user, logOut }) {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty, status]);
 
+  function updateCategories(items) {
+    setCategories(items);
+    setDirty(true);
+    setNotice("");
+    setError("");
+  }
+  function updateBanners(items) {
+    setBanners(items);
+    setDirty(true);
+    setNotice("");
+    setError("");
+  }
   function update(items) {
     setProducts(items);
     setDirty(true);
@@ -119,6 +149,7 @@ function Editor({ client, user, logOut }) {
       _key: crypto.randomUUID(),
       _type: "product",
       name: "",
+      categoryId: categories[0]?._key || "microverdes",
       grams: "",
       visible: true,
       image: { _type: "image", alt: "" },
@@ -132,8 +163,8 @@ function Editor({ client, user, logOut }) {
     setSelected(items[0]?._key || null);
     setRemovalKey(null);
   }
-  async function upload(file) {
-    if (!file || busy || uploading.current || !selected) return;
+  async function upload(file, type = "product", key = selected) {
+    if (!file || busy || uploading.current || !key) return;
     if (
       !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(
         file.type,
@@ -147,13 +178,12 @@ function Editor({ client, user, logOut }) {
     setStatus("uploading");
     setError("");
     setNotice("");
-    const key = selected;
     try {
       const asset = await client.assets.upload("image", file, {
         filename: file.name,
       });
       if (!mounted.current) return;
-      setProducts((items) =>
+      (type === "banner" ? setBanners : setProducts)((items) =>
         items.map((product) =>
           product._key === key
             ? {
@@ -168,7 +198,11 @@ function Editor({ client, user, logOut }) {
         ),
       );
       setDirty(true);
-      setNotice("Foto enviada. Publique para exibir a mudança no site.");
+      setNotice(
+        isLocalPreview
+          ? "Foto enviada. Salve a prévia local para conferir a mudança."
+          : "Foto enviada. Publique para exibir a mudança no site.",
+      );
     } catch {
       setError(
         "Não foi possível enviar a foto. Verifique sua conexão e sua permissão de edição.",
@@ -178,7 +212,7 @@ function Editor({ client, user, logOut }) {
       if (mounted.current) setStatus("ready");
     }
   }
-  function pastePhoto(event) {
+  function pastePhoto(event, type = "product", key = selected) {
     event.preventDefault();
     if (busy || uploading.current) return;
     const clipboard = event.clipboardData;
@@ -196,7 +230,7 @@ function Editor({ client, user, logOut }) {
       );
       return;
     }
-    upload(file);
+    upload(file, type, key);
   }
   async function publish() {
     setStatus("saving");
@@ -208,14 +242,20 @@ function Editor({ client, user, logOut }) {
         products,
         revision,
         pageCopy,
+        { categories, banners, documentId: catalogId },
       );
       if (!mounted.current) return;
-      setProducts(document.products);
+      const updated = prepareCatalogForEditing(document);
+      setProducts(updated.products);
+      setCategories(updated.categories);
+      setBanners(updated.banners);
       setPageCopy(normalizeCatalogCopy(document.pageCopy));
       setRevision(document._rev);
       setDirty(false);
       setNotice(
-        "Catálogo publicado! As alterações aparecem no site após cerca de um minuto, na próxima visita.",
+        isLocalPreview
+          ? "Prévia salva! Atualize a home local para conferir. O site em produção não foi alterado."
+          : "Catálogo publicado! As alterações aparecem no site após cerca de um minuto, na próxima visita.",
       );
     } catch (cause) {
       setError(
@@ -228,6 +268,20 @@ function Editor({ client, user, logOut }) {
       );
     } finally {
       if (mounted.current) setStatus("ready");
+    }
+  }
+  function bannerPhoto(banner) {
+    if (!banner?.image?.asset?._ref) return banner?.localImage || null;
+    try {
+      return imageBuilder
+        .image(banner.image)
+        .width(1400)
+        .height(600)
+        .fit("crop")
+        .auto("format")
+        .url();
+    } catch {
+      return null;
     }
   }
   function photo(product) {
@@ -262,7 +316,7 @@ function Editor({ client, user, logOut }) {
             <Sprout className="text-green-800" size={30} />
             <div>
               <p className="font-bold text-green-950">Litoral Microverdes</p>
-              <p className="text-sm text-gray-500">Painel do catálogo</p>
+              <p className="text-sm text-gray-500">Painel do site</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -293,11 +347,10 @@ function Editor({ client, user, logOut }) {
         <div className="mb-6 flex flex-wrap items-end justify-between gap-5">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-green-950">
-              Seu catálogo
+              Gerencie seu site
             </h1>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-gray-600">
-              Adicione fotos, edite os produtos e organize a vitrine. Publique
-              quando estiver tudo pronto.
+              Organize produtos, categorias, banners e textos em um só lugar.
             </p>
           </div>
           <button
@@ -307,9 +360,40 @@ function Editor({ client, user, logOut }) {
             className="inline-flex items-center gap-2 rounded-xl bg-green-900 px-5 py-3 font-semibold text-white hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Save size={18} />
-            {status === "saving" ? "Publicando…" : "Publicar alterações"}
+            {status === "uploading"
+              ? "Enviando imagem…"
+              : status === "saving"
+                ? "Salvando…"
+                : isLocalPreview
+                  ? "Salvar prévia local"
+                  : "Publicar alterações"}
           </button>
         </div>
+        {isLocalPreview && (
+          <p className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+            Ambiente local de validação. As alterações são salvas em uma cópia
+            separada e não mudam o site em produção.
+          </p>
+        )}
+        <nav aria-label="Áreas do painel" className="mb-6 flex flex-wrap gap-2">
+          {[
+            ["products", "Produtos"],
+            ["categories", "Categorias"],
+            ["banners", "Banners"],
+            ["copy", "Textos da página"],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              disabled={busy}
+              aria-pressed={section === id}
+              onClick={() => setSection(id)}
+              className={`${buttonClass} ${section === id ? "!border-green-900 !bg-green-900 !text-white" : ""}`}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
         {error && (
           <div
             role="alert"
@@ -342,7 +426,33 @@ function Editor({ client, user, logOut }) {
             {notice}
           </p>
         )}
-        {status !== "loading" && status !== "error" && (
+        {status !== "loading" &&
+          status !== "error" &&
+          section === "categories" && (
+            <CategoryManager
+              categories={categories}
+              products={products}
+              busy={busy}
+              onChange={updateCategories}
+              buttonClass={buttonClass}
+              inputClass={inputClass}
+            />
+          )}
+        {status !== "loading" &&
+          status !== "error" &&
+          section === "banners" && (
+            <BannerManager
+              banners={banners}
+              busy={busy}
+              onChange={updateBanners}
+              onUpload={(file, key) => upload(file, "banner", key)}
+              onPaste={(event, key) => pastePhoto(event, "banner", key)}
+              photo={bannerPhoto}
+              buttonClass={buttonClass}
+              inputClass={inputClass}
+            />
+          )}
+        {status !== "loading" && status !== "error" && section === "copy" && (
           <section
             aria-labelledby="page-copy-title"
             className="mb-6 rounded-2xl border border-green-900/10 bg-white p-5 md:p-6"
@@ -398,7 +508,8 @@ function Editor({ client, user, logOut }) {
             Carregando catálogo…
           </p>
         ) : (
-          status !== "error" && (
+          status !== "error" &&
+          section === "products" && (
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
               <section
                 className="min-w-0 rounded-2xl border border-green-900/10 bg-white p-5 md:p-6"
@@ -477,7 +588,13 @@ function Editor({ client, user, logOut }) {
                             {product.name || "Novo produto"}
                           </span>
                           <span className="mt-1 block text-xs text-gray-500">
-                            {product.grams || "—"} g ·{" "}
+                            {
+                              categories.find(
+                                (category) =>
+                                  category._key === product.categoryId,
+                              )?.name
+                            }{" "}
+                            · {product.grams || "—"} g ·{" "}
                             {product.visible ? "Visível" : "Oculto"}
                           </span>
                         </span>
@@ -516,7 +633,7 @@ function Editor({ client, user, logOut }) {
                       Vamos montar sua vitrine?
                     </h3>
                     <p className="mt-2 text-sm text-gray-500">
-                      Comece adicionando seu primeiro microverde.
+                      Comece adicionando seu primeiro produto.
                     </p>
                   </div>
                 )}
@@ -592,7 +709,7 @@ function Editor({ client, user, logOut }) {
                       </p>
                     </div>
                     <label className="block text-sm font-medium">
-                      Nome do microverde
+                      Nome do produto
                       <input
                         className={inputClass}
                         value={active.name}
@@ -600,6 +717,22 @@ function Editor({ client, user, logOut }) {
                         onChange={(event) => edit({ name: event.target.value })}
                         placeholder="Ex.: Rúcula"
                       />
+                    </label>
+                    <label className="block text-sm font-medium">
+                      Categoria do produto
+                      <select
+                        className={inputClass}
+                        value={active.categoryId}
+                        onChange={(event) =>
+                          edit({ categoryId: event.target.value })
+                        }
+                      >
+                        {categories.map((category) => (
+                          <option key={category._key} value={category._key}>
+                            {category.name || "Categoria sem nome"}
+                          </option>
+                        ))}
+                      </select>
                     </label>
                     <label className="block text-sm font-medium">
                       Peso da embalagem (g)

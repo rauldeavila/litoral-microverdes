@@ -1,8 +1,19 @@
+import { useState } from "react";
 import { ArrowUpRight, Sprout } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { whatsappUrl } from "../lib/contact";
 
-export function CatalogSection({ products, pageCopy }) {
+export function CatalogSection({ products, pageCopy, categories }) {
+  const [selected, setSelected] = useState("all");
+  const activeCategory = categories.some(
+    (category) => category._key === selected,
+  )
+    ? selected
+    : "all";
+  const visibleProducts =
+    activeCategory === "all"
+      ? products
+      : products.filter((product) => product.categoryId === activeCategory);
   return (
     <section
       id="catalogo"
@@ -28,14 +39,39 @@ export function CatalogSection({ products, pageCopy }) {
           <Sprout size={17} aria-hidden="true" /> Produção local · RS
         </span>
       </div>
+      <nav
+        aria-label="Filtrar produtos por categoria"
+        className="mt-7 flex flex-wrap gap-2"
+      >
+        {[{ _key: "all", name: "Todos" }, ...categories].map((category) => (
+          <button
+            key={category._key}
+            type="button"
+            aria-pressed={activeCategory === category._key}
+            onClick={() => setSelected(category._key)}
+            className={`max-w-full break-words rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${activeCategory === category._key ? "border-green-900 bg-green-900 text-white" : "border-green-900/20 bg-white text-green-900 hover:bg-green-50"}`}
+          >
+            {category.name}
+          </button>
+        ))}
+      </nav>
       {products.length > 0 ? (
         <>
           <p className="pb-6 pt-7 text-sm text-gray-500">
-            {products.length}{" "}
-            {products.length === 1 ? "variedade" : "variedades"}
+            {visibleProducts.length}{" "}
+            {visibleProducts.length === 1 ? "variedade" : "variedades"}
           </p>
+          {visibleProducts.length === 0 && (
+            <p
+              role="status"
+              className="rounded-2xl border border-green-900/10 bg-white px-6 py-12 text-center text-gray-600"
+            >
+              Em breve, novidades nesta categoria. Fale com a gente pelo
+              WhatsApp para saber mais.
+            </p>
+          )}
           <div className="grid grid-cols-1 gap-x-7 gap-y-12 min-[480px]:grid-cols-2 lg:grid-cols-3">
-            {products.map((product) => (
+            {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
