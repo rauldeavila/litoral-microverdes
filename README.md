@@ -41,10 +41,20 @@ conforme o [guia oficial de migração](https://tailwindcss.com/docs/upgrade-gui
 - `/#catalogo`: catálogo público na home, abaixo das redes sociais, com foto,
   nome e peso de cada embalagem. O menu rola até essa seção; `/catalogo`
   redireciona permanentemente para `/#catalogo`, preservando links antigos.
-- A faixa de fotos da home ocupa toda a largura, com imagens de proporção 4:3
-  e movimento horizontal contínuo, sem botão de pausa e sem parar ao passar
-  o mouse ou receber foco. Com redução de movimento ativada no sistema,
-  vira uma galeria horizontal manual, sem animação automática.
+- O carrossel da home mostra um banner por vez, de ponta a ponta, com setas,
+  indicadores e avanço automático a cada 6 segundos. A navegação manual reinicia
+  a contagem. Abas em segundo plano e a preferência por redução de movimento
+  suspendem o avanço automático; as setas continuam disponíveis.
+- **Categorias** no painel permite criar, renomear, reordenar e remover categorias
+  sem produtos vinculados (incluindo ocultos). As iniciais são Microverdes,
+  Flores Comestíveis e PANCs. Cada produto pertence a uma categoria, escolhida
+  no editor; renomear uma categoria mantém os vínculos. A home permite filtrar
+  por categoria. Limite: 30 categorias, mantendo pelo menos uma.
+- **Banners** no painel permite enviar ou colar imagens, editar nome e descrição,
+  reordenar com setas, ocultar e remover. Limite: 30 imagens, até 10 MB cada.
+  Recomenda-se 1920 × 820 px; no celular, a imagem recebe um recorte central.
+  Os sete arquivos antigos são usados como ponto de partida, sem upload automático.
+  Uma lista vazia ou todos os banners ocultos esconde o carrossel.
 - `/admin`: painel próprio em português, integrado ao SDK oficial do Sanity.
   A edição exige uma conta com acesso ao projeto. Cada usuário usa uma sessão
   individual; não há senhas próprias nem token compartilhado de escrita.
@@ -107,8 +117,24 @@ O painel de planos informa que o Growth Trial retorna automaticamente para Free.
 
 Limites Free consultados em 04/10/2026: 10 mil documentos, 250 mil requisições de
 API/mês, 1 milhão de requisições de API CDN/mês, 100 GB de assets e 100 GB de
-tráfego/mês. O catálogo é um único documento e usa cache de 60 segundos. Consulte
+tráfego/mês. O catálogo de produção é um único documento e usa cache de 60 segundos. Consulte
 o [plano oficial](https://www.sanity.io/pricing) antes de ampliar significativamente
 o uso; a gratuidade depende dessas cotas. Não foi ativado nenhum serviço pago.
 
 Execute `npm test`, `npm run audit` e `npm run build` para validar mudanças.
+
+## Validação local de categorias e banners
+
+`npm run dev -- --hostname localhost --port 3333` usa o documento `catalog-preview`
+no mesmo dataset. Na primeira leitura, sem uma prévia existente, os dados são
+copiados **em memória** de `catalog`; só o botão **Salvar prévia local** cria a
+cópia persistente. Leituras não migram nem alteram produção. O painel continua
+exigindo a conta Sanity autorizada; uploads vão para a biblioteca do mesmo projeto.
+
+A home local lê essa prévia a cada recarregamento. Produtos, categorias, banners
+e textos são salvos juntos, com validação de referências e controle de revisão.
+Documentos antigos ganham categorias e banners iniciais ao abrir, sem exigir
+migração prévia. Em builds de produção, a aplicação continua lendo/escrevendo
+somente `catalog`. Quando a prévia for aprovada, suas alterações de conteúdo
+precisam ser revisadas e transferidas explicitamente para produção; deploy do
+código não copia automaticamente o documento de validação.

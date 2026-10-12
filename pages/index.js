@@ -17,17 +17,7 @@ import {
   homeStructuredData,
 } from "../lib/seo";
 
-const carouselImages = [
-  "/images/carousel/image-1.png",
-  "/images/carousel/image-2.png",
-  "/images/carousel/image-3.png",
-  "/images/carousel/image-4.png",
-  "/images/carousel/image-5.png",
-  "/images/carousel/image-6.png",
-  "/images/carousel/image-7.png",
-];
-
-export default function Home({ products, pageCopy }) {
+export default function Home({ products, pageCopy, categories, banners }) {
   const handleWhatsAppClick = () => {
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
@@ -92,14 +82,21 @@ export default function Home({ products, pageCopy }) {
             </div>
           </div>
 
-          <ImageCarousel images={carouselImages} />
+          <ImageCarousel
+            key={banners.map((banner) => banner._key).join("-")}
+            images={banners}
+          />
 
           <div className="px-4">
             <SocialLinks onWhatsAppClick={handleWhatsAppClick} />
           </div>
 
           <div className="mx-auto mt-8 w-full max-w-6xl px-4 md:mt-16 md:px-8 lg:px-12">
-            <CatalogSection products={products} pageCopy={pageCopy} />
+            <CatalogSection
+              products={products}
+              pageCopy={pageCopy}
+              categories={categories}
+            />
           </div>
         </main>
 
